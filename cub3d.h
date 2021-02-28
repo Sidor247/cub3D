@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igorlebedev <igorlebedev@student.42.fr>    +#+  +:+       +#+        */
+/*   By: cwhis <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 10:35:50 by igorlebedev       #+#    #+#             */
-/*   Updated: 2021/02/14 19:29:12 by igorlebedev      ###   ########.fr       */
+/*   Updated: 2021/02/28 19:50:57 by cwhis            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,23 @@
 # define SPEED 0.1
 # define ROT 0.1
 
+# define RED 0x00FF0000
+# define GREEN 0x0000FF00
+# define BLUE 0x000000FF
+# define BLACK 0x00000000
+
+typedef	struct	s_point
+{
+	int x;
+	int y;
+}				t_point;
+
+typedef	struct	s_vector
+{
+	float x;
+	float y;
+}				t_vector;
+
 typedef struct  s_image
 {
 	void	*img;
@@ -45,12 +62,12 @@ typedef struct  s_image
 
 typedef	struct	s_player
 {
-	float	x;
-	float	y;
-	float	dir;
-	int		move;
-	int		strafe;
-	int		rotate;
+	t_vector	pos;
+	t_vector	dir;
+	int			keys;
+	int			move;
+	int			strafe;
+	int			rotate;
 }				t_player;
 
 typedef struct  s_mlx

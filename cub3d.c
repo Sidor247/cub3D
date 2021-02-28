@@ -3,115 +3,43 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: igorlebedev <igorlebedev@student.42.fr>    +#+  +:+       +#+        */
+/*   By: cwhis <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 09:21:00 by igorlebedev       #+#    #+#             */
-/*   Updated: 2021/02/10 16:15:40 by igorlebedev      ###   ########.fr       */
+/*   Updated: 2021/02/28 20:47:45 by cwhis            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
 
-void	put_square(t_image *img, int x, int y, int size, int color)
+void	set_dir(t_vector *player, char c)
 {
-	char	*dst;
-	int		i;
-	int		j;
-
-	i = -(size / 2);
-	j = -(size / 2);
-	while (j < size / 2)
-	{
-		while(i < size / 2)
-		{
-			dst = img->addr + (y + j) * img->line_length +
-			(x + i) * (img->bits_per_pixel / 8);
-			*(unsigned int*)dst = color;
-			i++;
-		}
-		i = -(size / 2);
-		j++;
-	}
+	if (c == 'N' || c == 'S')
+		player->dir.y = (c == 'S') ? 1 : -1;
+	else
+		player->dir.y = 0;
+	if (c == 'E' || c == 'W')
+		player->dir.x = (c == 'E') ? 1 : -1;
+	else
+		player->dir.x = 0;
 }
 
-void	put_line(t_image *img, int x, int y, int length, float angle, int color)
-{
-	float	sin_a;
-	float	cos_a;
-	char	*dst;
-	int		i;
-
-	i = 0;
-	sin_a = sinf(angle);
-	cos_a = cosf(angle);
-	while (i < length)
-	{
-		dst = img->addr + (y + (int)((float)i * sin_a)) * img->line_length +
-		(x + (int)((float)i * cos_a)) * (img->bits_per_pixel / 8);
-		*(unsigned int*)dst = color;
-		i++;
-	}
-}
-
-void	draw_map(t_image *img, char **map)
-{
-	int	i = 0;
-	int	j = 0;
-	int x = 20;
-	int y = 20;
-
-	while (map[j])
-	{
-		while (map[j][i])
-		{
-			if (map[j][i] == '1')
-				put_square(img, x, y, 20, 0x000000FF);
-			else
-				put_square(img, x, y, 20, 0x00000000);
-			i++;
-			x += 20;
-		}
-		i = 0;
-		x = 20;
-		j++;
-		y += 20;
-	}
-}
-
-void	draw_player(t_image *img, t_player *player)
-{
-	put_square(img, 20 + (int)(player->x * 20),
-	20 + (int)(player->y * 20), (int)(20 * COL_SIZE), 0x0000FF00);
-	put_line(img, 20 + (int)(player->x * 20),
-	20 + (int)(player->y * 20), 50, player->dir, 0x00FF0000);
-}
-
-
-int		player_init(char **map, t_player *player)
+int		pos_init(char **map, t_player *player)
 {
 	int		i;
 	int		j;
-	int 	k;
-	char	*s;
 
 	i = -1;
 	j = -1;
-	s = "ESWN";
 	while (map[++j])
 	{
 		while (map[j][++i])
 		{
-			if (ft_strchr(s, map[j][i]))
+			if (ft_strchr("ESWN", map[j][i]))
 			{
-				player->x = (float)i;
-				player->y = (float)j;
-				k = 0;
-				while (s[k] != map[j][i])
-					k++;
-				player->dir = (float)k * M_PI_2;
-				player->move = 0;
-				player->strafe = 0;
-				player->rotate = 0;
+				player->pos.x = (float)i;
+				player->pos.y = (float)j;
+				set_dir(player, map[j][i]);
 				return (1);
 			}
 		}
@@ -120,20 +48,13 @@ int		player_init(char **map, t_player *player)
 	return (-1);
 }
 
-void	move_player(t_player *player)
+int		player_init(t_player *player, char **map)
 {
-	if (player->move)
-	{
-		player->x += (float)(player->move) * cosf(player->dir) * SPEED;
-		player->y += (float)(player->move) * sinf(player->dir) * SPEED;
-	}
-	if (player->strafe)
-	{
-		player->x += (float)(player->strafe) * sinf(-player->dir) * SPEED;
-		player->y += (float)(player->strafe) * cosf(-player->dir) * SPEED;
-	}
-	if (player->rotate)
-		player->dir += (float)(player->rotate) * ROT;
+	player->keys = 0x00000000;
+	player->move = 0;
+	player->strafe = 0;
+	player->rotate = 0;
+	return (pos_init(map, player));
 }
 
 int		render_frame(t_mlx *mlx)
@@ -154,7 +75,7 @@ int		image_init(t_mlx *mlx)
 	return (1);
 }
 
-int		mlx_staff(t_mlx *mlx)
+int		mlx_start(t_mlx *mlx)
 {
 	mlx->ptr = mlx_init();
 	mlx->win = mlx_new_window(mlx->ptr, 800, 600, "cub3d");
@@ -166,38 +87,59 @@ int		mlx_staff(t_mlx *mlx)
 int		key_press(int key, t_mlx *mlx)
 {
 	if (key == W)
-		mlx->player.move = 1;
+		mlx->player.keys |= 0x01;
 	else if (key == S)
-		mlx->player.move = -1;
+		mlx->player.keys |= 0x02;
 	else if (key == D)
-		mlx->player.strafe = 1;
+		mlx->player.keys |= 0x04;
 	else if (key == A)
-		mlx->player.strafe = -1;
+		mlx->player.keys |= 0x08;
 	else if (key == RIGHT)
-		mlx->player.rotate = 1;
+		mlx->player.keys |= 0x10;
 	else if (key == LEFT)
-		mlx->player.rotate = -1;
-	return (key);
+		mlx->player.keys |= 0x20;
+	return (1);
 }
 
 int		key_release(int key, t_mlx *mlx)
 {
-	if (key == W || key == S)
-		mlx->player.move = 0;
-	else if (key == A || key == D)
-		mlx->player.strafe = 0;
-	if (key == LEFT || key == RIGHT)
-		mlx->player.rotate = 0;
+	if (key == W)
+		mlx->player.keys &= ~0x01;
+	else if (key == S)
+		mlx->player.keys &= ~0x02;
+	else if (key == D)
+		mlx->player.keys &= ~0x04;
+	else if (key == A)
+		mlx->player.keys &= ~0x08;
+	else if (key == RIGHT)
+		mlx->player.keys &= ~0x10;
+	else if (key == LEFT)
+		mlx->player.keys &= ~0x20;
 	return (1);
 }
 
+void	move_player(t_player *player)
+{
+	if (player->move)
+	{
+		player->x += (float)(player->move) * cosf(player->dir) * SPEED;
+		player->y += (float)(player->move) * sinf(player->dir) * SPEED;
+	}
+	if (player->strafe)
+	{
+		player->x += (float)(player->strafe) * sinf(-player->dir) * SPEED;
+		player->y += (float)(player->strafe) * cosf(-player->dir) * SPEED;
+	}
+	if (player->rotate)
+		player->dir += (float)(player->rotate) * ROT;
+}
 int		main(int argc, char **argv)
 {
 	t_mlx		mlx;
 
 	if (argc == 2)
 		mlx.map = parser(argv[1]);
-	mlx_staff(&mlx);
+	mlx_start(&mlx);
 	mlx_hook(mlx.win, 2, 0, key_press, &mlx);
 	mlx_hook(mlx.win, 3, 0, key_release, &mlx);
 	mlx_loop_hook(mlx.ptr, render_frame, &mlx);

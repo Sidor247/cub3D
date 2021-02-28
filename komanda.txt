@@ -1,0 +1,1 @@
+gcc -Wall -Wextra -Werror libmlx.dylib -framework OpenGL -framework AppKit gnl/*.c libft/*.c parser.c cub3d.c -o cub3d 
