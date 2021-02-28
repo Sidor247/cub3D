@@ -6,7 +6,7 @@
 /*   By: igorlebedev <igorlebedev@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/31 10:35:50 by igorlebedev       #+#    #+#             */
-/*   Updated: 2021/02/09 22:01:58 by igorlebedev      ###   ########.fr       */
+/*   Updated: 2021/02/14 19:29:12 by igorlebedev      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,9 @@ typedef	struct	s_player
 	float	x;
 	float	y;
 	float	dir;
-	int		x_speed;
-	int		y_speed;
-	int		z_speed;
+	int		move;
+	int		strafe;
+	int		rotate;
 }				t_player;
 
 typedef struct  s_mlx

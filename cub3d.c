@@ -6,7 +6,7 @@
 /*   By: igorlebedev <igorlebedev@student.42.fr>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/30 09:21:00 by igorlebedev       #+#    #+#             */
-/*   Updated: 2021/02/09 22:37:31 by igorlebedev      ###   ########.fr       */
+/*   Updated: 2021/02/10 16:15:40 by igorlebedev      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,14 +36,18 @@ void	put_square(t_image *img, int x, int y, int size, int color)
 
 void	put_line(t_image *img, int x, int y, int length, float angle, int color)
 {
+	float	sin_a;
+	float	cos_a;
 	char	*dst;
 	int		i;
 
 	i = 0;
+	sin_a = sinf(angle);
+	cos_a = cosf(angle);
 	while (i < length)
 	{
-		dst = img->addr + (y + (int)((float)i * sinf(angle))) * img->line_length +
-		(x + (int)((float)i * cosf(angle))) * (img->bits_per_pixel / 8);
+		dst = img->addr + (y + (int)((float)i * sin_a)) * img->line_length +
+		(x + (int)((float)i * cos_a)) * (img->bits_per_pixel / 8);
 		*(unsigned int*)dst = color;
 		i++;
 	}
@@ -105,9 +109,9 @@ int		player_init(char **map, t_player *player)
 				while (s[k] != map[j][i])
 					k++;
 				player->dir = (float)k * M_PI_2;
-				player->x_speed = 0;
-				player->y_speed = 0;
-				player->z_speed = 0;
+				player->move = 0;
+				player->strafe = 0;
+				player->rotate = 0;
 				return (1);
 			}
 		}
@@ -118,12 +122,18 @@ int		player_init(char **map, t_player *player)
 
 void	move_player(t_player *player)
 {
-	if (player->y_speed)
-		player->y += (float)(player->y_speed) * SPEED;
-	if (player->x_speed)
-		player->x += (float)(player->x_speed) * SPEED;
-	if (player->z_speed)
-		player->dir += (float)(player->z_speed) * ROT;
+	if (player->move)
+	{
+		player->x += (float)(player->move) * cosf(player->dir) * SPEED;
+		player->y += (float)(player->move) * sinf(player->dir) * SPEED;
+	}
+	if (player->strafe)
+	{
+		player->x += (float)(player->strafe) * sinf(-player->dir) * SPEED;
+		player->y += (float)(player->strafe) * cosf(-player->dir) * SPEED;
+	}
+	if (player->rotate)
+		player->dir += (float)(player->rotate) * ROT;
 }
 
 int		render_frame(t_mlx *mlx)
@@ -141,7 +151,6 @@ int		image_init(t_mlx *mlx)
 	mlx->img.addr = mlx_get_data_addr(mlx->img.img, &(mlx->img.bits_per_pixel),
 	&(mlx->img.line_length), &(mlx->img.endian));
 	render_frame(mlx);
-	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->img.img, 0, 0);
 	return (1);
 }
 
@@ -157,28 +166,28 @@ int		mlx_staff(t_mlx *mlx)
 int		key_press(int key, t_mlx *mlx)
 {
 	if (key == W)
-		mlx->player.y_speed = -1;
+		mlx->player.move = 1;
 	else if (key == S)
-		mlx->player.y_speed = 1;
-	else if (key == A)
-		mlx->player.x_speed = -1;
+		mlx->player.move = -1;
 	else if (key == D)
-		mlx->player.x_speed = 1;
-	else if (key == LEFT)
-		mlx->player.z_speed = -1;
+		mlx->player.strafe = 1;
+	else if (key == A)
+		mlx->player.strafe = -1;
 	else if (key == RIGHT)
-		mlx->player.z_speed = 1;
+		mlx->player.rotate = 1;
+	else if (key == LEFT)
+		mlx->player.rotate = -1;
 	return (key);
 }
 
 int		key_release(int key, t_mlx *mlx)
 {
 	if (key == W || key == S)
-		mlx->player.y_speed = 0;
+		mlx->player.move = 0;
 	else if (key == A || key == D)
-		mlx->player.x_speed = 0;
+		mlx->player.strafe = 0;
 	if (key == LEFT || key == RIGHT)
-		mlx->player.z_speed = 0;
+		mlx->player.rotate = 0;
 	return (1);
 }
 
