@@ -1,0 +1,11 @@
+R 1280 800
+NO ./textures/1.xpm
+SO ./textures/2.xpm
+WE ./textures/3.xpm
+EA ./textures/4.xpm
+S ./textures/sprite.xpm
+F 66,66,66
+C 0,0,0
+111
+1N1
+111
