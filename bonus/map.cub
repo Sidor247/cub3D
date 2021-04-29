@@ -1,0 +1,16 @@
+R 1280 720
+TEX ./assets/tex_atlas.png
+ITEMS ./assets/items_atlas.png
+SOLID ./assets/solid_atlas.png
+HUD ./assets/hud_atlas.png
+CG ./assets/chaingun_atlas.png
+RL ./assets/rl_atlas.png
+BULLET ./assets/bullet.png
+
+111111
+1Sde01
+100001
+100001
+100001
+1A00A1
+111111
