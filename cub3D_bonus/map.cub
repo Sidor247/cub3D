@@ -1,0 +1,16 @@
+R 1280 720
+TEX ./assets/tex_atlas.png
+ITEMS ./assets/items_atlas.png
+SOLID ./assets/solid_atlas.png
+HUD ./assets/hud_atlas.png
+CG ./assets/chaingun_atlas.png
+RL ./assets/rl_atlas.png
+BULLET ./assets/bullet.png
+BLOW ./assets/blow.png
+
+22222222222222222
+1AAAAAAASAAAAAAA1
+100000abcde000001
+100BBBabcdeDDD001
+100000abcde000001
+22222222222222222
