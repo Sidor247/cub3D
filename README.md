@@ -15,6 +15,7 @@ $ ./launcher.sh
 * `<- ->` or mouse to rotate
 * `Shift` to run
 * `LMB` to shoot
+* `1 2` to change weapon
 * `Backspace` to free mouse
 
 ## Turned-in bonuses
