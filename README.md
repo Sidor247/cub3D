@@ -40,7 +40,7 @@ With [stencil buffer][6] you can reach higher and more stable FPS. It allows you
 * Hit-scan and projectile weapons
 * Items on floor
 
-[1]:https://github.com/Sidor247/cub3D/tree/main/cub3D_bonus/screenshot.bmp
+[1]:https://github.com/Sidor247/cub3D/tree/main/screenshot.jpg
 [2]:https://harm-smits.github.io/42docs/libs/minilibx
 [3]:https://en.wikipedia.org/wiki/Xlib
 [4]:https://github.com/42Paris/minilibx-linux
