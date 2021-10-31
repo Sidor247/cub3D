@@ -6,7 +6,7 @@
 /*   By: cwhis <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/08 17:51:16 by cwhis             #+#    #+#             */
-/*   Updated: 2021/10/31 01:10:35 by cwhis            ###   ########.fr       */
+/*   Updated: 2021/10/31 17:57:53 by cwhis            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -148,7 +148,7 @@ typedef struct s_player
 
 typedef struct s_data
 {
-	t_image			textures[100];
+	t_image			textures[64];
 	t_image			items[6];
 	t_image			solid[4];
 	t_image			bullet[4];

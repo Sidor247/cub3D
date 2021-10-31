@@ -6,7 +6,7 @@
 /*   By: cwhis <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/08 17:53:48 by cwhis             #+#    #+#             */
-/*   Updated: 2021/05/02 15:56:21 by cwhis            ###   ########.fr       */
+/*   Updated: 2021/10/31 16:42:19 by cwhis            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	stats_init(t_stats *stats)
 	stats->health = 100;
 	stats->armor = 100;
 	stats->ammo[0] = 100;
-	stats->ammo[1] = 100;
+	stats->ammo[1] = 0;
 	stats->max_ammo[0] = 400;
 	stats->max_ammo[1] = 100;
 	stats->c_weapon = 0;

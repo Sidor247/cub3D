@@ -6,7 +6,7 @@
 /*   By: cwhis <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/08 17:51:08 by cwhis             #+#    #+#             */
-/*   Updated: 2021/05/02 16:42:53 by cwhis            ###   ########.fr       */
+/*   Updated: 2021/10/31 18:13:43 by cwhis            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@ void	render_frame(t_image *img, t_data *data)
 
 	player = &data->player;
 	clean_stencil_buf(img);
+	draw_hud(img, data);
+	draw_weapon(img, data);
 	draw_sprites(img, data);
 	draw_walls(img, data);
 	draw_ceil(img, WHITE);
-	draw_tex_floor(img, player->dir, player->pos, &data->textures[42]);
-	draw_weapon(img, data);
-	draw_hud(img, data);
+	draw_tex_floor(img, player->dir, player->pos, &data->textures[FLOOR_NUM]);
 }
 
 int	loop_funcs(t_mlx *mlx)
@@ -45,8 +45,8 @@ int	loop_funcs(t_mlx *mlx)
 	set_moves(&mlx->data.player, mlx->keys);
 	move_player(mlx);
 	raycating(&mlx->data);
-	sort_sprites(&mlx->data.sprites, mlx->data.player.pos);
 	show_effects(&mlx->data);
+	sort_sprites(&mlx->data.sprites, mlx->data.player.pos);
 	render_frame(&mlx->img, &mlx->data);
 	mlx_put_image_to_window(mlx->ptr, mlx->win, mlx->img.ptr, 0, 0);
 	time = clock();
@@ -64,6 +64,7 @@ void	cub3d(char *file, int flag)
 	mlx_start(&mlx, file);
 	if (flag)
 	{
+		raycating(&mlx.data);
 		sort_sprites(&mlx.data.sprites, mlx.data.player.pos);
 		render_frame(&mlx.img, &mlx.data);
 		create_bmp(&mlx.img);

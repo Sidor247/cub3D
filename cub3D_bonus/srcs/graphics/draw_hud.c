@@ -6,7 +6,7 @@
 /*   By: cwhis <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/26 12:21:56 by cwhis             #+#    #+#             */
-/*   Updated: 2021/04/27 23:34:03 by cwhis            ###   ########.fr       */
+/*   Updated: 2021/10/31 17:28:52 by cwhis            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	put_scaled_pixel(t_image *img, t_point start, unsigned int color)
 {
 	t_point	tmp;
+	t_point	pixel;
 
 	if (color == 0x0000FFFF)
 		return ;
@@ -23,8 +24,11 @@ void	put_scaled_pixel(t_image *img, t_point start, unsigned int color)
 	{
 		tmp.x = -1;
 		while (++tmp.x < HUD_SCALE)
-			*get_pix_addr(img, point(start.x + tmp.x, start.y + tmp.y))
-			= color;
+		{
+			pixel = point(start.x + tmp.x, start.y + tmp.y);
+			*get_pix_addr(img, pixel)= color;
+			img->stencil_buf[pixel.y][pixel.x] = 1;
+		}
 	}
 }
 
@@ -43,7 +47,8 @@ void	draw_element(t_image *img, t_image *element, t_point start)
 		point2.x = start.x;
 		while (++point1.x < res.width)
 		{
-			put_scaled_pixel(img, point2, *get_pix_addr(element, point1));
+			if (!img->stencil_buf[point2.y][point2.x])
+				put_scaled_pixel(img, point2, *get_pix_addr(element, point1));
 			point2.x += HUD_SCALE;
 		}
 		point2.y += HUD_SCALE;
@@ -99,9 +104,7 @@ void	draw_hud(t_image *img, t_data *data)
 
 	res = img->res;
 	stats = &data->stats;
-	hud = point((res.width - HUD_SCALE * 320) / 2, res.height - HUD_SCALE * 32);
-	draw_element(img, &data->hud.back, hud);
-	hud = point(hud.x + 2 * HUD_SCALE, hud.y + 4 * HUD_SCALE);
+	hud = point(res.width / 2 - HUD_SCALE * 158, res.height - HUD_SCALE * 28);
 	if (stats->c_weapon == -1)
 		draw_number(img, data->hud.big, -1, hud);
 	else
@@ -118,4 +121,6 @@ void	draw_hud(t_image *img, t_data *data)
 	draw_ammo(img, data->hud.med_l, stats->ammo, hud);
 	hud.x += 25 * HUD_SCALE;
 	draw_ammo(img, data->hud.med_l, stats->max_ammo, hud);
+	hud = point((res.width - HUD_SCALE * 320) / 2, res.height - HUD_SCALE * 32);
+	draw_element(img, &data->hud.back, hud);
 }

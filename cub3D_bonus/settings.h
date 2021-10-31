@@ -6,12 +6,13 @@
 /*   By: cwhis <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/10/30 19:27:16 by cwhis             #+#    #+#             */
-/*   Updated: 2021/10/31 00:39:04 by cwhis            ###   ########.fr       */
+/*   Updated: 2021/10/31 18:02:08 by cwhis            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 //Can be modified
 
+# define FLOOR_NUM 33
 # define PLR_COL 0.2f
 # define OBJ_COL 0.2f
 # define R_SPEED 10

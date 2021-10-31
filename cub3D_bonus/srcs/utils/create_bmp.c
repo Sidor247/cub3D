@@ -6,7 +6,7 @@
 /*   By: cwhis <marvin@42.fr>                       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/04/05 14:39:40 by igorlebedev       #+#    #+#             */
-/*   Updated: 2021/10/30 02:31:03 by cwhis            ###   ########.fr       */
+/*   Updated: 2021/10/31 16:58:11 by cwhis            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	write_pixel_data(int fd, t_image *img)
 	while (point.y--)
 	{
 		point.x = -1;
-		while (++point.y < img->res.width)
+		while (++point.x < img->res.width)
 			write(fd, get_pix_addr(img, point), 3);
 		point.x = -1;
 		while (++point.x < padding)
